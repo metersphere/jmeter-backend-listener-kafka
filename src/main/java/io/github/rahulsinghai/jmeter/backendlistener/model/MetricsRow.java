@@ -137,7 +137,7 @@ public class MetricsRow {
       HashMap<String, Object>[] assertionArray = new HashMap[assertionResults.length];
       int i = 0;
       StringBuilder failureMessageStringBuilder = new StringBuilder();
-      boolean isFailure = false;
+      boolean isFailure = !this.sampleResult.isSuccessful();
       for (AssertionResult assertionResult : assertionResults) {
         HashMap<String, Object> assertionMap = new HashMap<>();
         boolean failure = assertionResult.isFailure() || assertionResult.isError();
