@@ -4,7 +4,7 @@
 
 	<groupId>io.metersphere</groupId>
 	<artifactId>jmeter.backendlistener.kafka</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.3</version>
 	<packaging>jar</packaging>
 
 	<name>${project.artifactId}</name>
@@ -56,7 +56,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-    <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+    	<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
 		<maven.deploy.plugin.version>3.0.0-M1</maven.deploy.plugin.version>
 		<maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
 		<maven.enforcer.plugin.version>3.0.0-M2</maven.enforcer.plugin.version>
@@ -74,7 +74,7 @@
 		<junit.version>5.4.2</junit.version>
 		<org.apache.commons>3.8.1</org.apache.commons>
 		<org.apache.jmeter.version>5.1.1</org.apache.jmeter.version>
-		<org.apache.kafka>2.3.0</org.apache.kafka>
+		<org.apache.kafka>2.6.0</org.apache.kafka>
 	</properties>
 
 	<dependencies>
