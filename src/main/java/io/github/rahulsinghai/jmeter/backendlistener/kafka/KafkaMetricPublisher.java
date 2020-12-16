@@ -16,8 +16,8 @@
 
 package io.github.rahulsinghai.jmeter.backendlistener.kafka;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
@@ -40,7 +40,7 @@ class KafkaMetricPublisher {
   KafkaMetricPublisher(KafkaProducer<Long, String> producer, String topic) {
     this.producer = producer;
     this.topic = topic;
-    this.metricList = new CopyOnWriteArrayList<>();
+    this.metricList = new LinkedList<>();
   }
 
   /**
@@ -73,7 +73,7 @@ class KafkaMetricPublisher {
   }
 
   /** This method publishes the documents present in the list (metricList). */
-  public synchronized void publishMetrics() {
+  public void publishMetrics() {
 
     long time = System.currentTimeMillis();
     for (int i = 0; i < this.metricList.size(); i++) {
