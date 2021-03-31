@@ -274,12 +274,16 @@ public class KafkaBackendClient extends AbstractBackendListenerClient {
 
     checkTestMode(context.getParameter(KAFKA_TEST_MODE));
     //
-    expectedEndTime = Long.parseLong(context.getParameter("test.expectedEndTime"));
-    delayTime = Long.parseLong(context.getParameter("test.expectedDelayEndTime"));
-    expectedEndTimeChecker = new ExpectedEndTimeChecker(expectedEndTime, delayTime);
-    Thread endTimeChecker = new Thread(expectedEndTimeChecker);
-    endTimeChecker.setDaemon(true);
-    endTimeChecker.start();
+    try {
+      expectedEndTime = Long.parseLong(context.getParameter("test.expectedEndTime"));
+      delayTime = Long.parseLong(context.getParameter("test.expectedDelayEndTime"));
+      expectedEndTimeChecker = new ExpectedEndTimeChecker(expectedEndTime, delayTime);
+      Thread endTimeChecker = new Thread(expectedEndTimeChecker);
+      endTimeChecker.setDaemon(true);
+      endTimeChecker.start();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     super.setupTest(context);
   }
 
