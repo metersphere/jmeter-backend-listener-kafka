@@ -7,13 +7,14 @@ import org.slf4j.LoggerFactory;
 public class ExpectedEndTimeChecker implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ExpectedEndTimeChecker.class);
 
-    private boolean running;
+    private boolean running = true;
     private final long expectedEndTime;
     private final long delayTime;
 
     public ExpectedEndTimeChecker(long expectedEndTime, long delayTime) {
         this.expectedEndTime = expectedEndTime;
         this.delayTime = delayTime;
+        logger.info("ExpectedEndTime: " + expectedEndTime + ", delay: " + delayTime);
     }
 
     @Override
