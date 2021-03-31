@@ -19,10 +19,17 @@ package io.github.rahulsinghai.jmeter.backendlistener.kafka;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import io.github.rahulsinghai.jmeter.backendlistener.model.MetricsRow;
+
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.config.Arguments;
+import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jmeter.visualizers.backend.AbstractBackendListenerClient;
@@ -202,6 +209,8 @@ public class KafkaBackendClient extends AbstractBackendListenerClient {
   private Set<String> filters;
   private Set<String> fields;
   private int buildNumber;
+  private long expectedEndTime;
+  private long delayTime;
 
   @Override
   public Arguments getDefaultParameters() {
@@ -263,6 +272,9 @@ public class KafkaBackendClient extends AbstractBackendListenerClient {
     this.publisher = new KafkaMetricPublisher(producer, context.getParameter(KAFKA_TOPIC));
 
     checkTestMode(context.getParameter(KAFKA_TEST_MODE));
+    //
+    expectedEndTime = Long.parseLong(context.getParameter("test.expectedEndTime"));
+    delayTime = Long.parseLong(context.getParameter("test.expectedDelayEndTime"));
     super.setupTest(context);
   }
 
@@ -285,6 +297,11 @@ public class KafkaBackendClient extends AbstractBackendListenerClient {
 
   @Override
   public void handleSampleResults(List<SampleResult> results, BackendListenerContext context) {
+
+    if (System.currentTimeMillis() > expectedEndTime + delayTime) {
+      StandardJMeterEngine.stopEngineNow();
+    }
+
     for (SampleResult sr : results) {
       MetricsRow row =
           new MetricsRow(
