@@ -211,6 +211,7 @@ public class KafkaBackendClient extends AbstractBackendListenerClient {
   private int buildNumber;
   private long expectedEndTime;
   private long delayTime;
+  private ExpectedEndTimeChecker expectedEndTimeChecker;
 
   @Override
   public Arguments getDefaultParameters() {
@@ -275,6 +276,10 @@ public class KafkaBackendClient extends AbstractBackendListenerClient {
     //
     expectedEndTime = Long.parseLong(context.getParameter("test.expectedEndTime"));
     delayTime = Long.parseLong(context.getParameter("test.expectedDelayEndTime"));
+    expectedEndTimeChecker = new ExpectedEndTimeChecker(expectedEndTime, delayTime);
+    Thread endTimeChecker = new Thread(expectedEndTimeChecker);
+    endTimeChecker.setDaemon(true);
+    endTimeChecker.start();
     super.setupTest(context);
   }
 
@@ -297,11 +302,6 @@ public class KafkaBackendClient extends AbstractBackendListenerClient {
 
   @Override
   public void handleSampleResults(List<SampleResult> results, BackendListenerContext context) {
-
-    if (System.currentTimeMillis() > expectedEndTime + delayTime) {
-      StandardJMeterEngine.stopEngineNow();
-    }
-
     for (SampleResult sr : results) {
       MetricsRow row =
           new MetricsRow(
@@ -337,6 +337,7 @@ public class KafkaBackendClient extends AbstractBackendListenerClient {
 
   @Override
   public void teardownTest(BackendListenerContext context) throws Exception {
+    this.expectedEndTimeChecker.stop();
     if (this.publisher.getListSize() > 0) {
       this.publisher.publishMetrics();
     }
