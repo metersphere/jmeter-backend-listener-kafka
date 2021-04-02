@@ -20,16 +20,11 @@ import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import io.github.rahulsinghai.jmeter.backendlistener.model.MetricsRow;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.config.Arguments;
-import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jmeter.visualizers.backend.AbstractBackendListenerClient;
@@ -209,7 +204,7 @@ public class KafkaBackendClient extends AbstractBackendListenerClient {
   private Set<String> filters;
   private Set<String> fields;
   private int buildNumber;
-  private long expectedEndTime;
+  private long expectedDuration;
   private long delayTime;
   private ExpectedEndTimeChecker expectedEndTimeChecker;
 
@@ -275,9 +270,9 @@ public class KafkaBackendClient extends AbstractBackendListenerClient {
     checkTestMode(context.getParameter(KAFKA_TEST_MODE));
     //
     try {
-      expectedEndTime = Long.parseLong(context.getParameter("test.expectedEndTime"));
+      expectedDuration = Long.parseLong(context.getParameter("test.expectedDuration"));
       delayTime = Long.parseLong(context.getParameter("test.expectedDelayEndTime"));
-      expectedEndTimeChecker = new ExpectedEndTimeChecker(expectedEndTime, delayTime);
+      expectedEndTimeChecker = new ExpectedEndTimeChecker(expectedDuration, delayTime);
       Thread endTimeChecker = new Thread(expectedEndTimeChecker);
       endTimeChecker.setDaemon(true);
       endTimeChecker.start();
